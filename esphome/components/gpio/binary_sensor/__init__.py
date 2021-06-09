@@ -2,7 +2,7 @@ import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome import pins
 from esphome.components import binary_sensor
-from esphome.const import CONF_ID, CONF_PIN
+from esphome.const import CONF_ID, CONF_PIN, CONF_FREQUENCY
 from .. import gpio_ns
 
 GPIOBinarySensor = gpio_ns.class_(
@@ -13,6 +13,7 @@ CONFIG_SCHEMA = binary_sensor.BINARY_SENSOR_SCHEMA.extend(
     {
         cv.GenerateID(): cv.declare_id(GPIOBinarySensor),
         cv.Required(CONF_PIN): pins.gpio_input_pin_schema,
+        cv.Optional(CONF_FREQUENCY, default='0Hz'): cv.All(cv.frequency, cv.Range(min=0, min_included=True))
     }
 ).extend(cv.COMPONENT_SCHEMA)
 
@@ -24,3 +25,6 @@ async def to_code(config):
 
     pin = await cg.gpio_pin_expression(config[CONF_PIN])
     cg.add(var.set_pin(pin))
+
+    if CONF_FREQUENCY in config:
+        cg.add(var.set_frequency(config[CONF_FREQUENCY]))

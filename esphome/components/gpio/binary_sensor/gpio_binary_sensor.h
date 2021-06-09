@@ -9,6 +9,7 @@ namespace gpio {
 class GPIOBinarySensor : public binary_sensor::BinarySensor, public Component {
  public:
   void set_pin(GPIOPin *pin) { pin_ = pin; }
+  void set_frequency(float frequency) { frequency_ = frequency; }
   // ========== INTERNAL METHODS ==========
   // (In most use cases you won't need these)
   /// Setup pin
@@ -21,6 +22,8 @@ class GPIOBinarySensor : public binary_sensor::BinarySensor, public Component {
 
  protected:
   GPIOPin *pin_;
+  float frequency_;
+  bool read_state();
 };
 
 }  // namespace gpio
